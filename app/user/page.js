@@ -167,7 +167,7 @@ export default function UserPage() {
   const fetchStylists = async () => {
     try {
       // Example: /api/v1/user/stylists => returns an array of stylists
-      const res = await axios.get('http://localhost:8000/api/v1/user/stylists', {
+      const res = await axios.get('http://localhost:8000/api/v1/stylist/getAllStylists', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setStylists(res.data.stylists);
@@ -180,18 +180,19 @@ export default function UserPage() {
   const handleConnect = async (stylistId) => {
     try {
       const res = await axios.post(
+        
         'http://localhost:8000/api/v1/appointment/request',
         { stylistId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      const { channelName, agoraToken, userId } = res.data;
+      const { channelName, agoraToken, uid } = res.data;
 
       const newRtcProps = {
         appId: process.env.NEXT_PUBLIC_AGORA_APP_ID || "0667a7d327224fb7b8c3856c507692ec",
         channel: channelName,
         token: agoraToken,  // This is the user token returned by requestConnection
-        uid: userId,
+        uid: uid,
         // uid: "67755c25149f151f1999dd32" 
         role: 'host'
       };
@@ -264,7 +265,7 @@ export default function UserPage() {
                 </div>
                 <h3 style={styles.stylistName}>{stylist.name}</h3>
                 <button 
-                  onClick={() => handleConnect(stylist._id)}
+                  onClick={() => handleConnect(stylist.id)}
                   style={{
                     ...styles.connectButton,
                     '&:hover': {

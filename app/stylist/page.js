@@ -27,7 +27,7 @@ const StylistPage = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/v1/user/login', { email, password });
+      const response = await axios.post('http://localhost:8000/api/v1/stylist/login', { email, password });
       setToken(response.data.token);
     } catch (error) {
       console.error("Login error:", error);
@@ -40,9 +40,7 @@ const StylistPage = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       console.log("Pending appointments response data:", response.data);
-      setAppointments(response.data);
-      
-
+      setAppointments(response.data.pendingAppointments);
     } catch (error) {
       console.error("Error fetching pending appointments:", error);
     }
@@ -54,14 +52,14 @@ const StylistPage = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
      
-      const { channelName, agoraToken } = response.data;
+      const { channelName, agoraToken, uid } = response.data;
       setAppointmentId(appointmentId);
 
       const newRtcProps = {
         appId: "0667a7d327224fb7b8c3856c507692ec",
         channel: channelName,
         token: agoraToken,
-        uid: "677a436df407f78681c902d4",
+        uid: uid,
         role: 'host'
       };
 
